@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_30_190813) do
+ActiveRecord::Schema.define(version: 2019_11_05_185553) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,27 @@ ActiveRecord::Schema.define(version: 2019_10_30_190813) do
     t.date "date_of_birth"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_customers_on_email", unique: true
   end
 
+  create_table "import_details", force: :cascade do |t|
+    t.integer "created_customers_amount"
+    t.integer "rejected_customers_amount"
+    t.integer "import_status"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.bigint "import_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["import_id"], name: "index_import_details_on_import_id"
+  end
+
+  create_table "imports", force: :cascade do |t|
+    t.string "title"
+    t.string "csv_file"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  add_foreign_key "import_details", "imports"
 end
