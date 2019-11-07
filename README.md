@@ -1,24 +1,47 @@
-# README
+### Clone the repository
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+```sh
+$ git clone https://github.com/abdsofia/customers-provider.git
+$ cd customers-provider
+```
+### Install and configure system dependencies
 
-Things you may want to cover:
 
-* Ruby version
+In order to run the project, you'll need:
 
-* System dependencies
+* ruby 2.5.5 
+* Rails 6.0.0
+* PostgreSQL
+* Redis
+* Sidekiq
+* Bundler
+* foreman
 
-* Configuration
+### Run bundler to install gems:
 
-* Database creation
+```sh
+$ bundle install
+```
 
-* Database initialization
+### Set up your local environment
 
-* How to run the test suite
+```sh
+$ cp .env.example .env
+$ cp config/database.yml.example config/database.yml
+# => Make sure to set PostgreSQL related environment variables in `.env`
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+### Database Setup
 
-* Deployment instructions
 
-* ...
+```sh
+$ rails db:migrate
+```
+
+### Run the app
+
+Instead of running `sidekiq`, `redis-server` and `rails s` separately, Procfile-based simplification is used. To start the web app, simply run:
+
+```sh
+$ foreman start -f Procfile
+```
