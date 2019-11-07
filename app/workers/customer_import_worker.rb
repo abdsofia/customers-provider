@@ -37,7 +37,7 @@ class CustomerImportWorker
     items = batch_data_from_file(id)
     Customer.import items,
                     on_duplicate_key_ignore: true,
-                    batch_size: 500
+                    batch_size: ENV.fetch("BATCH_SIZE") { 500 }
   end
 
   def get_file_path(id)
