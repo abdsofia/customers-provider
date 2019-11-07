@@ -38,4 +38,5 @@ RSpec.describe CustomerImportWorker, type: :worker do
       end
     end
   end
+  
 end
