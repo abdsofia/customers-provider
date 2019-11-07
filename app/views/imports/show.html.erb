@@ -1,0 +1,46 @@
+<p id="notice"><%= notice %></p>
+<div class="container">
+  <div class="row">
+    <h1>Imports</h1>
+    <table class="table table-bordered table-sm">
+      <thead class="thead-light">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Title</th>
+        <th scope="col">CSV file</th>
+        <th scope="col">Rejected customers</th>
+        <th scope="col">Created customers</th>
+        <th scope="col">Import status</th>
+        <th scope="col">Started at</th>
+        <th scope="col">Completed at</th>
+        <th scope="col">Created at</th>
+      </tr>
+      </thead>
+        <tbody>
+        <tr>
+          <th scope="row"><%= @import.id %></th>
+          <td><%= @import.title %></td>
+          <td><%= @import.csv_file %></td>
+          <td><%= @import.import_detail.rejected_customers_amount %></td>
+          <td><%= @import.import_detail.created_customers_amount %></td>
+          <td><%= @import.import_detail.import_status %></td>
+          <td><%= @import.import_detail.started_at.to_s if @import.import_detail.started_at %></td>
+          <td><%= @import.import_detail.completed_at.to_s if @import.import_detail.completed_at %></td>
+          <td><%= @import.created_at.to_s %></td>
+        </tr>
+        </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <%= link_to 'Start Import', update_import_details_path(:import_id => @import.id), :method => :put, class: "btn btn-primary" %>
+  </div>
+  <div class="row">
+    <%= button_to 'New Import', new_import_path, {method: 'get', class: 'btn ' } %>
+  </div>
+  <div class="row">
+    <div class="col-9">
+      <%= link_to 'Edit', edit_import_path(@import) %> |
+      <%= link_to 'Back', imports_path, class: 'btn btn-link' %>
+    </div>
+  </div>
+</div>
