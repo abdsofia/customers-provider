@@ -27,7 +27,6 @@ $ bundle install
 
 ```sh
 $ cp .env.example .env
-$ cp config/database.yml.example config/database.yml
 # => Make sure to set PostgreSQL related environment variables in `.env`
 ```
 
