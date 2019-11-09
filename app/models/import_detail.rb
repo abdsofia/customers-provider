@@ -1,7 +1,7 @@
 class ImportDetail < ApplicationRecord
   belongs_to :import
 
-  enum import_status: [:created, :started, :completed]
+  enum import_status: %i[created started completed]
 
-  scope :details, -> (id) { where(import: id) }
+  scope :details, ->(id) { where(import: id) }
 end
