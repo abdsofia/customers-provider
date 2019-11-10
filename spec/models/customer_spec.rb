@@ -1,67 +1,69 @@
 require 'rails_helper'
 
 RSpec.describe Customer, type: :model do
-  let(:customer) { FactoryBot.create(:customer) }
+  let(:customer) do
+    FactoryBot.create(:customer)
+  end
 
-  describe "valid factory" do
-    it "is valid with valid attributes" do
+  describe 'valid factory' do
+    it 'is valid with valid attributes' do
       expect(customer).to be_valid
     end
   end
 
-  describe "validation" do
-    context "when first name" do
-      it "is blank" do
-        expect(build(:customer, first_name: "")).not_to be_valid
+  describe 'validation' do
+    context 'when first name' do
+      it 'is blank' do
+        expect(build(:customer, first_name: '')).not_to be_valid
       end
 
-      it "is shorter than 2 characters" do
+      it 'is shorter than 2 characters' do
         expect(build(:customer, first_name: 'a')).not_to be_valid
       end
 
-      it "is 2 characters long" do
+      it 'is 2 characters long' do
         expect(build(:customer, first_name: 'ab')).to be_valid
       end
 
-      it "includes other symbols than characters" do
+      it 'includes other symbols than characters' do
         expect(build(:customer, first_name: 'a5b')).not_to be_valid
         expect(build(:customer, first_name: '*a$b')).not_to be_valid
       end
     end
 
-    context "when last name" do
-      it "is blank" do
-        expect(build(:customer, last_name: "")).not_to be_valid
+    context 'when last name' do
+      it 'is blank' do
+        expect(build(:customer, last_name: '')).not_to be_valid
       end
 
-      it "is shorter than 2 characters" do
+      it 'is shorter than 2 characters' do
         expect(build(:customer, last_name: 'a')).not_to be_valid
       end
 
-      it "is 2 characters long" do
+      it 'is 2 characters long' do
         expect(build(:customer, last_name: 'ab')).to be_valid
       end
 
-      it "includes other symbols than characters" do
+      it 'includes other symbols than characters' do
         expect(build(:customer, last_name: 'ab1')).not_to be_valid
         expect(build(:customer, last_name: 'a#b')).not_to be_valid
       end
     end
 
-    context "when email" do
-      it "is blank" do
+    context 'when email' do
+      it 'is blank' do
         expect(build(:customer, email: '')).not_to be_valid
       end
 
-      it { expect(customer).to_not allow_value("base@example").for(:email) }
+      it { expect(customer).to_not allow_value('base@example').for(:email) }
 
-      it { expect(customer).to_not allow_value("base.example.com").for(:email) }
+      it { expect(customer).to_not allow_value('base.example.com').for(:email) }
 
       it { should validate_uniqueness_of(:email) }
     end
 
-    context "when date of birth" do
-      it "is blank" do
+    context 'when date of birth' do
+      it 'is blank' do
         expect(build(:customer, date_of_birth: '')).not_to be_valid
       end
 

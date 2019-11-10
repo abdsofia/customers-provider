@@ -4,20 +4,17 @@ class CustomerImportWorker
 
   require 'csv'
 
+  IMPORT_STATUSES = %w[started completed].freeze
+
   def perform(id)
     update_import_detail_at_start(id, Time.now)
 
     result_data = import_customers(id)
     update_import_details_at_finish(id, result_data)
-  end
-
-  def on_success(status, options)
-    completed = {
-        completed_at: Time.now,
-        import_status: "completed"
-    }
-    ImportDetail.find(options['id']).update_attributes(completed)
-    # UpdateImportDetailWorker.perform_at(Time.now, options['id'], completed)
+  rescue StandardError => e
+    logger.warn(
+      "Can not update details about the import due to: #{e.message}"
+    )
   end
 
   private
@@ -37,7 +34,11 @@ class CustomerImportWorker
     items = batch_data_from_file(id)
     Customer.import items,
                     on_duplicate_key_ignore: true,
-                    batch_size: ENV.fetch("BATCH_SIZE") { 500 }
+                    batch_size: ENV.fetch('BATCH_SIZE') { 500 }
+  rescue StandardError => e
+    logger.warn(
+      "Can not import customers from the provided file due to: #{e.message}"
+    )
   end
 
   def get_file_path(id)
@@ -45,18 +46,27 @@ class CustomerImportWorker
   end
 
   def update_import_detail_at_start(id, start_time)
-    started  = {
-        import_status: 1,
-        started_at: start_time
+    logger.info "---------------------------------------------------------\n"
+    logger.info 'The import has started:'
+
+    started = {
+      import_status: IMPORT_STATUSES[0],
+      started_at: start_time
     }
     UpdateImportDetailWorker.perform_at(start_time, id, started)
   end
 
   def update_import_details_at_finish(id, result_data)
-    amounts = {
-        rejected_customers_amount: result_data.failed_instances.count,
-        created_customers_amount: result_data.ids.count
-      }
-    UpdateImportDetailWorker.perform_async(id, amounts)
+    logger.info 'The import has finished:'
+    logger.info "---------------------------------------------------------\n"
+
+    complete_time = Time.now
+    completed = {
+      rejected_customers_amount: result_data.failed_instances.count,
+      created_customers_amount: result_data.ids.count,
+      import_status: IMPORT_STATUSES[1],
+      completed_at: complete_time
+    }
+    UpdateImportDetailWorker.perform_at(Time.now, id, completed)
   end
 end

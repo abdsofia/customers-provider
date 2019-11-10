@@ -21,17 +21,15 @@ class ImportsController < ApplicationController
   end
 
   # GET /imports/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /imports
   # POST /imports.json
   def create
     @import         = Import.new(import_params)
     @import_detail  = @import.build_import_detail(
-        {
-            import_status: 0
-        })
+      import_status: 0
+    )
 
     respond_to do |format|
       if @import.save
@@ -69,13 +67,14 @@ class ImportsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_import
-      @import = Import.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def import_params
-      params.require(:import).permit(:title, :csv_file)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_import
+    @import = Import.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def import_params
+    params.require(:import).permit(:title, :csv_file)
+  end
 end
